@@ -1,0 +1,82 @@
+Query 1
+SELECT property_id, address, bedrooms
+FROM properties
+WHERE balconies > 0
+ORDER BY bedrooms DESC;
+
+Query2
+SELECT bedrooms, COUNT(*) AS total_properties
+FROM properties
+WHERE balconies > 0
+GROUP BY bedrooms
+ORDER BY bedrooms DESC;
+SELECT bedrooms, COUNT(*) AS total_properties
+FROM properties
+WHERE balconies > 0
+GROUP BY bedrooms
+ORDER BY bedrooms DESC;
+
+Query3
+SELECT *
+FROM properties
+WHERE balconies > 0
+ORDER BY bedrooms DESC;
+
+Join 1
+SELECT Table1.* 
+FROM Table1
+JOIN Table2 ON Table1.Sno = Table2.Sno 
+WHERE Table2.price_per_square_feet > (SELECT AVG(price_per_square_feet) FROM Table2);
+
+Join2
+SELECT Table1.* 
+FROM Table1 
+JOIN Table2 ON Table1.Sno = Table2.Sno 
+WHERE Table2.City IN (
+  SELECT City 
+  FROM Table2 
+  GROUP BY City 
+  HAVING AVG(price_per_square_feet) > (SELECT AVG(price_per_square_feet) FROM Table2)
+);
+
+Join3
+SELECT Table1.* 
+FROM Table1
+JOIN Table2 ON Table1.Sno = Table2.Sno 
+WHERE Table1.Landmarks LIKE '%Park%' 
+  AND Table2.price_per_square_feet < (
+    SELECT AVG(price_per_square_feet) 
+    FROM Table2 
+    WHERE Landmarks LIKE '%Park%'
+  );
+
+Join4
+SELECT Table2.* 
+FROM Table2 
+WHERE Table2.price_per_square_feet > (SELECT AVG(booking_amount) FROM Table3);
+
+Join5 
+SELECT COUNT(*) 
+FROM Table2 
+WHERE Table2.Sno IN (
+  SELECT Sno 
+  FROM Table1 
+  WHERE beds > (SELECT MAX(beds) FROM Table1)
+);
+
+Join6
+SELECT Table1.* 
+FROM Table1 
+WHERE Table1.City IN (
+  SELECT City 
+  FROM Table3 
+  GROUP BY City 
+  HAVING AVG(booking_amount) > (SELECT AVG(booking_amount) FROM Table3)
+);
+
+Join7
+SELECT Table1.* 
+FROM Table1 
+JOIN Table3 ON Table1.Sno = Table3.Sno 
+WHERE Table3.furnished_status = 'Unfurnished' 
+  AND Table3.facing NOT IN (SELECT DISTINCT facing FROM Table3);
